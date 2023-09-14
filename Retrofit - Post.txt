@@ -273,6 +273,116 @@ public class APIClient {
         }
     }
 
+8. API Response Model Class
+
+public class LoginResModel {
+    @SerializedName("status")
+    @Expose
+    private String status;
+    @SerializedName("records")
+    @Expose
+    private LoginDataModel records;
+    @SerializedName("msg")
+    @Expose
+    private String msg;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public LoginDataModel getRecords() {
+        return records;
+    }
+
+    public void setRecords(LoginDataModel records) {
+        this.records = records;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+
+public class LoginDataModel {
+    @SerializedName("user_id")
+    @Expose
+    private String userId;
+    @SerializedName("name")
+    @Expose
+    private String name;
+    @SerializedName("user_name")
+    @Expose
+    private String userName;
+    @SerializedName("user_role")
+    @Expose
+    private String userRole;
+    @SerializedName("user_type")
+    @Expose
+    private String userType;
+    @SerializedName("profile_picture")
+    @Expose
+    private String profilePicture;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(String userRole) {
+        this.userRole = userRole;
+    }
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+}
+
+}
+
+
 
 
 
