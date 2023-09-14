@@ -1,0 +1,231 @@
+ 
+
+1.Add dependencies
+
+//Google Places
+implementation 'com.google.android.libraries.places:places:3.2.0'
+
+2. Add this, In your top-level settings.gradle file
+
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+} 
+
+3.Add this in your AndroidManifest.xml,
+
+<meta-data
+    android:name="com.google.android.geo.API_KEY"
+    android:value="${MAPS_API_KEY}" />
+
+4.Java Code 
+
+private PlaceArrayAdapter placeAdapter;
+
+PlacesClient placesClient;
+
+String fromAddress = "";
+String srcRegName = "";
+String srcRegLatitude = "";
+String srcRegLongitude = "";
+String srcRegLatLong = "";
+
+ @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = ActivityAddVehicleBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        init();
+        addressEditText();
+}
+
+     private void init() {
+
+        if (!Places.isInitialized()) {
+            Places.initialize(AddVehicleActivity.this, getString(R.string.mapkey));
+        }
+        placesClient = Places.createClient(AddVehicleActivity.this);
+
+     
+
+    }
+
+
+
+  private void addressEditText() {
+
+        placeAdapter = new PlaceArrayAdapter(AddVehicleActivity.this, R.layout.layout_item_places, placesClient);
+
+        binding.edtSourceReg.setAdapter(placeAdapter);
+        binding.edtSourceReg.setOnItemClickListener((parent, view, position, id) -> {
+            PlaceDataModel place = (PlaceDataModel) parent.getItemAtPosition(position);
+            binding.edtSourceReg.setText(place.getFullText());
+            binding.edtSourceReg.setSelection(binding.edtSourceReg.length());
+            getPlaceDetailsLatLong(place.getPlaceId(), "1");
+        });
+        binding.edtSourceReg.addTextChangedListener(new MyTextWatcher(binding.edtSourceReg));
+
+
+    }
+
+    private void getPlaceDetailsLatLong(String placeId, String type) {
+
+        List<Place.Field> placeFields = Arrays.asList(Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG);
+
+        FetchPlaceRequest request = FetchPlaceRequest.builder(placeId, placeFields).build();
+
+
+        placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
+
+            Place place = response.getPlace();
+            LatLng latLng = place.getLatLng();
+            String address = place.getAddress();
+            String city = place.getName();
+            String latLang = place.getLatLng().toString();
+
+            String ll = latLang.replace("lat/lng:", "").trim();
+            String modifiedString = ll.substring(1, ll.length() - 1);
+            String[] splitStrings = modifiedString.split(",");
+            String latFinal = "";
+            String langFinal = "";
+
+            latFinal = splitStrings[0].trim();
+            langFinal = splitStrings[1].trim();
+
+            if (type.equals("1")) {
+
+                fromAddress = address;
+                srcRegName = city;
+                srcRegLatitude = latFinal;
+                srcRegLongitude = langFinal;
+                srcRegLatLong = latLang;
+
+                System.out.println("### fromLatitude f  : " + srcRegLatitude);
+                System.out.println("### fromLongitude f : " + srcRegLongitude);
+                System.out.println("### fromLatLong  f : " + srcRegLatLong);
+                System.out.println("### fromAddress  f : " + fromAddress);
+                System.out.println("### srcRegName  f : " + srcRegName);
+
+            }
+
+        }).addOnFailureListener((exception) -> {
+
+        });
+
+
+    }
+
+    class MyTextWatcher implements TextWatcher {
+        private final View view;
+
+        private MyTextWatcher(View view) {
+            this.view = view;
+        }
+
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            switch (view.getId()) {
+
+                case R.id.edtSourceReg:
+
+                    if (charSequence.toString().length() > 0) {
+                        binding.btnClearReg.setVisibility(View.VISIBLE);
+                    } else {
+                        binding.btnClearReg.setVisibility(View.GONE);
+                    }
+
+                    break;
+            }
+        }
+
+        public void afterTextChanged(Editable editable) {
+
+
+        }
+    }
+
+5.XML code
+
+   <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:fontFamily="@font/ubuntu_reg"
+                    android:text="Current vehicle location"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:orientation="vertical">
+
+                    <fragment
+                        android:id="@+id/mapLocation"
+                        android:name="com.google.android.gms.maps.SupportMapFragment"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintBottom_toTopOf="@+id/frameFrom"/>
+
+
+                    <FrameLayout
+                        android:id="@+id/frameFrom"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="0.9"
+                        app:layout_constraintStart_toStartOf="@+id/mapLocation"
+                        app:layout_constraintEnd_toEndOf="@+id/mapLocation"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        >
+
+                        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                            android:id="@+id/edtSourceReg"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="start"
+                            android:background="@drawable/rectangle_bg"
+                            android:padding="12dp"
+                            android:paddingEnd="25dp"
+                            android:hint="Enter Source Region"
+                            android:singleLine="true"
+                            android:textColor="@color/text_color2"
+                            android:textColorHint="@color/text_color2"
+                            android:fontFamily="@font/ubuntu_reg"
+                            android:textSize="14sp"
+                            />
+
+                        <ImageButton
+                            android:id="@+id/btnClearReg"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_marginEnd="15dp"
+                            android:padding="5dp"
+                            android:layout_gravity="center_vertical|end"
+                            android:src="@drawable/baseline_clear_24"
+                            android:visibility="gone"
+                            android:background="@color/transparent"
+                            />
+
+                    </FrameLayout>
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
+
+    
