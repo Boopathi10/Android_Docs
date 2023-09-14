@@ -1,113 +1,112 @@
 1. XML Code
 
-  <LinearLayout
-                        android:layout_width="match_parent"
+<LinearLayout
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="vertical">
+	
+	<androidx.appcompat.widget.AppCompatTextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:fontFamily="@font/roboto_bold"
+		android:gravity="center"
+		android:layout_marginTop="10dp"
+		android:text="Login"
+		android:textColor="@color/app_color"
+		android:textSize="20sp" />
+
+	<androidx.appcompat.widget.AppCompatTextView
+		android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+		android:fontFamily="@font/roboto_reg"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                android:text="User Name *"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/edittext_name"
+                android:layout_width="match_parent"
+                android:layout_height="27dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="15dp"
+                android:background="@drawable/edit_text_bg"
+        	android:fontFamily="@font/roboto_reg"
+                android:inputType="textPersonName"
+                android:paddingStart="10dp"
+                android:paddingTop="2dp"
+                android:paddingEnd="1dp"
+                android:paddingBottom="2dp"
+                android:textColor="@color/text_color"
+                android:textColorHint="@color/text_color"
+                android:textSize="14sp" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="35dp"
+                android:fontFamily="@font/roboto_reg"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                android:text="Password *"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="27dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="15dp"
+                android:background="@drawable/edit_text_bg"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <androidx.appcompat.widget.AppCompatEditText
+			android:id="@+id/edit_text_password"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.8"
+                        android:background="@null"
+                        android:fontFamily="@font/roboto_reg"
+                        android:inputType="textPassword"
+                        android:letterSpacing="0.25"
+                        android:paddingStart="10dp"
+                        android:gravity="center_vertical"
+                        android:paddingEnd="15dp"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+
+
+                <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/password_toggle"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="15dp"
+                        android:layout_weight="0.2"
+                        android:src="@drawable/ic_eye_off" />
 
+        </LinearLayout>
 
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/roboto_bold"
-                            android:gravity="center"
-                            android:layout_marginTop="10dp"
-                            android:text="Login"
-                            android:textColor="@color/app_color"
-                            android:textSize="20sp" />
+        <androidx.appcompat.widget.AppCompatButton
+ 		android:id="@+id/login_btn"
+		android:layout_width="150dp"
+ 		android:layout_height="27dp"
+   		android:layout_gravity="center"
+  		android:layout_marginTop="70dp"
+  		android:layout_marginBottom="25dp"
+ 		android:background="@drawable/button_bg"
+  		android:fontFamily="@font/roboto_bold"
+      		android:text="Login"
+		android:textAllCaps="false"
+ 		android:textColor="@color/white"
+ 		android:textSize="14sp" />
 
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="20dp"
-                            android:fontFamily="@font/roboto_reg"
-                            android:paddingStart="15dp"
-                            android:paddingEnd="15dp"
-                            android:text="User Name *"
-                            android:textColor="@color/black"
-                            android:textSize="15sp" />
-
-                        <androidx.appcompat.widget.AppCompatEditText
-                            android:id="@+id/edittext_name"
-                            android:layout_width="match_parent"
-                            android:layout_height="27dp"
-                            android:layout_marginStart="15dp"
-                            android:layout_marginTop="5dp"
-                            android:layout_marginEnd="15dp"
-                            android:background="@drawable/edit_text_bg"
-                            android:fontFamily="@font/roboto_reg"
-                            android:inputType="textPersonName"
-                            android:paddingStart="10dp"
-                            android:paddingTop="2dp"
-                            android:paddingEnd="1dp"
-                            android:paddingBottom="2dp"
-                            android:textColor="@color/text_color"
-                            android:textColorHint="@color/text_color"
-                            android:textSize="14sp" />
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="35dp"
-                            android:fontFamily="@font/roboto_reg"
-                            android:paddingStart="15dp"
-                            android:paddingEnd="15dp"
-                            android:text="Password *"
-                            android:textColor="@color/black"
-                            android:textSize="15sp" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="27dp"
-                            android:layout_marginStart="15dp"
-                            android:layout_marginTop="5dp"
-                            android:layout_marginEnd="15dp"
-                            android:background="@drawable/edit_text_bg"
-                            android:orientation="horizontal"
-                            android:weightSum="2">
-
-                            <androidx.appcompat.widget.AppCompatEditText
-                                android:id="@+id/edit_text_password"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1.8"
-                                android:background="@null"
-                                android:fontFamily="@font/roboto_reg"
-                                android:inputType="textPassword"
-                                android:letterSpacing="0.25"
-                                android:paddingStart="10dp"
-                                android:gravity="center_vertical"
-                                android:paddingEnd="15dp"
-                                android:textColor="@color/black"
-                                android:textSize="14sp" />
-
-
-                            <androidx.appcompat.widget.AppCompatImageView
-                                android:id="@+id/password_toggle"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_marginEnd="15dp"
-                                android:layout_weight="0.2"
-                                android:src="@drawable/ic_eye_off" />
-
-                        </LinearLayout>
-
-                        <androidx.appcompat.widget.AppCompatButton
-                            android:id="@+id/login_btn"
-                            android:layout_width="150dp"
-                            android:layout_height="27dp"
-                            android:layout_gravity="center"
-                            android:layout_marginTop="70dp"
-                            android:layout_marginBottom="25dp"
-                            android:background="@drawable/button_bg"
-                            android:fontFamily="@font/roboto_bold"
-                            android:text="Login"
-                            android:textAllCaps="false"
-                            android:textColor="@color/white"
-                            android:textSize="14sp" />
-
-                    </LinearLayout>
+        </LinearLayout>
 
 
 2.Java Code 
@@ -258,6 +257,21 @@ public class APIClient {
     }
 
 }
+
+7. bulid.gradle(module level)
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "BASE_URL", "\TYPE URL HERE\"" // Demo URL
+           //buildConfigField "String", "BASE_URL",  "\TYPE URL HERE\""  // LIVE URL
+        }
+        debug {
+            buildConfigField "String", "BASE_URL", "\TYPE URL HERE\"" // Demo URL
+           //buildConfigField "String", "BASE_URL",  "\TYPE URL HERE\""  // LIVE URL
+        }
+    }
 
 
 
