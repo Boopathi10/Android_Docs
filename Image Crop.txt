@@ -1,0 +1,110 @@
+1. build.gradle(Module level)
+
+//Image cropper
+    implementation 'com.github.CanHub:Android-Image-Cropper:4.3.0'
+
+2. Java Code
+
+   boolean isProfileImg = false;
+   Uri uri;
+   String profileBase64 = "";
+   String docsBase64 = "";
+
+
+       binding.addDoc.setOnClickListener(v -> {
+            uri = null;
+            isProfileImg = false;
+            requestMultiplePermissions();
+        });
+
+
+
+    ActivityResultLauncher<CropImageContractOptions> cropImage =
+            registerForActivityResult(new CropImageContract(),
+                    result -> {
+                        if (result.isSuccessful()) {
+                            try {
+                                uri = result.getUriContent();
+                                if (isProfileImg) {
+                                    profileBase64 = extensions.toBase64(uri, this);
+                                    extensions.loadCircular(binding.profileImg, uri, R.drawable.ic_user_icon);
+                                } else {
+                                    docsBase64 = extensions.toBase64(uri, this);
+                                    binding.changeDoc.setVisibility(View.VISIBLE);
+                                    extensions.load(binding.changeDoc, uri);
+                                }
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                    });
+
+    private void requestMultiplePermissions() {
+
+        List<String> listPer;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+
+            listPer = Arrays.asList( Manifest.permission.CAMERA,
+                    Manifest.permission.READ_MEDIA_IMAGES);
+        }else {
+            listPer = Arrays.asList(
+                    Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA
+            );
+        }
+
+        if (RuntimePermissionUtil.checkPermission(this, listPer)) {
+
+            cropImage.launch(new CropImageContractOptions(uri,
+                    new CropImageOptions()).setGuidelines(CropImageView.Guidelines.ON).setAutoZoomEnabled(true));
+        } else {
+            runtimePermissionUtil.requestMultiplePermissions(this, listPer);
+
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == RuntimePermissionUtil.RESULT_CODE) {
+
+            if (grantResults.length > 0) {
+
+                boolean PERMISSION_GRANTED = true;
+
+
+                List<String> list =new ArrayList<>();
+
+                for (int i=0 ; i< permissions.length;i++) {
+
+
+                    if (grantResults[i] != PackageManager.PERMISSION_GRANTED){
+                        list.add(permissions[i]);
+                        PERMISSION_GRANTED = false;
+                    }
+
+                }
+
+                if (PERMISSION_GRANTED){
+                    cropImage.launch(new CropImageContractOptions(uri,
+                            new CropImageOptions()).setGuidelines(CropImageView.Guidelines.ON).setAutoZoomEnabled(true));
+                }else {
+                    runtimePermissionUtil.deniedPermissionList(this,list);
+                }
+
+            }
+        }
+
+    }
+
+4.Manifest.xml File
+
+	<activity
+            android:name="com.canhub.cropper.CropImageActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Base.Theme.AppCompat" />
