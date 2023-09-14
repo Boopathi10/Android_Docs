@@ -1,0 +1,112 @@
+1.XML Code 
+
+   <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:fontFamily="@font/ubuntu_reg"
+                    android:text="Add your Vehicle Routes"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/edtCity"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/rectangle_bg"
+                    android:fontFamily="@font/ubuntu_reg"
+                    android:gravity="start|center"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="3dp"
+                    android:hint="Vehicle Routes"
+                    android:textColor="@color/grey_900"
+                    android:textSize="14sp" />
+
+2.Java Code (API CALLING)
+
+    public void GET_REGION_LIST() {
+
+        ApiInterface apiInterface = ApiService.getAPIClient();
+        Call<StateListModel> call = apiInterface.stateList();
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<StateListModel> call, @NonNull Response<StateListModel> response) {
+
+                StateListModel items = response.body();
+                if (response.code() == 200) {
+
+                    if (items != null) {
+
+                        boolean status = items.isSuccess();
+
+                        if (status) {
+
+                            List<StateListModel.Data> dataList = items.getData();
+                            ArrayList_city_id.clear();
+                            ArrayList_city_name.clear();
+                            list.clear();
+
+                            ArrayList_sup_city_name.clear();
+                            ArrayList_sup_city_id.clear();
+
+                            ArrayList_sup_city_id.add("");
+                            ArrayList_sup_city_name.add("Select Source Region");
+
+
+                            for (StateListModel.Data da : dataList) {
+
+                                ArrayList_sup_city_id.add(da != null ? String.valueOf(da.getStateId()) : null);
+                                ArrayList_sup_city_name.add(da != null ? da.getStateName() : null);
+
+                                ArrayList_city_id.add(String.valueOf(da.getStateId()));
+                                ArrayList_city_name.add(da.getStateName());
+                                clearedList.add(new MultiSpinnerModel(da.getStateName()));
+                                list.add(new MultiSpinnerModel(da.getStateName()));
+                            }
+
+                            multiSpnAdapter.setList(list);
+                            rvCity.setAdapter(multiSpnAdapter);
+
+                            System.out.println("###  ---  list size   = " + list.size());
+                            System.out.println("###  ---  multiSpnAdapter count  = "
+                                    + multiSpnAdapter.getItemCount());
+
+                            setMultiSpn(regionName);
+
+                            System.out.println("###  ---  reg name = " + regionName);
+
+                            spotsDialog.dismiss();
+                        }
+                    } else {
+                        spotsDialog.dismiss();
+                    }
+                } else if (500 == response.code()) {
+                    spotsDialog.dismiss();
+                } else if (205 == response.code()) {
+                    spotsDialog.dismiss();
+                } else if (400 == response.code()) {
+                    spotsDialog.show();
+                }
+
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<StateListModel> call, @NonNull Throwable t) {
+                System.out.println("###  onFailure RegionModel " + t.getLocalizedMessage());
+                Extensions.errorToast(AddVehicleActivity.this, "Something went to wrong");
+                spotsDialog.dismiss();
+                call.cancel();
+            }
+        });
+    }
+
+3.Interface Class
+   @GET("statelist")
+    Call<StateListModel> stateList();
+
+
+
+
+
+
