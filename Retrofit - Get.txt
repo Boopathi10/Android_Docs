@@ -105,6 +105,74 @@
    @GET("statelist")
     Call<StateListModel> stateList();
 
+4. API Response Model Class
+public class StateListModel {
+    @SerializedName("success")
+    @Expose
+    private boolean success;
+    @SerializedName("data")
+    @Expose
+    private List<Data> data;
+    @SerializedName("message")
+    @Expose
+    private String message;
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
+
+    public List<Data> getData() {
+        return data;
+    }
+
+    public void setData(List<Data> data) {
+        this.data = data;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+
+    public class Data {
+
+        @SerializedName("state_id")
+        @Expose
+        private int stateId;
+        @SerializedName("state_name")
+        @Expose
+        private String stateName;
+
+        public int getStateId() {
+            return stateId;
+        }
+
+        public void setStateId(int stateId) {
+            this.stateId = stateId;
+        }
+
+        public String getStateName() {
+            return stateName;
+        }
+
+        public void setStateName(String stateName) {
+            this.stateName = stateName;
+        }
+
+    }
+
+}
+
+
+
 
 
 
