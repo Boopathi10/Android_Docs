@@ -1,0 +1,267 @@
+1. XML Code
+
+  <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/roboto_bold"
+                            android:gravity="center"
+                            android:layout_marginTop="10dp"
+                            android:text="Login"
+                            android:textColor="@color/app_color"
+                            android:textSize="20sp" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:fontFamily="@font/roboto_reg"
+                            android:paddingStart="15dp"
+                            android:paddingEnd="15dp"
+                            android:text="User Name *"
+                            android:textColor="@color/black"
+                            android:textSize="15sp" />
+
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/edittext_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="27dp"
+                            android:layout_marginStart="15dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginEnd="15dp"
+                            android:background="@drawable/edit_text_bg"
+                            android:fontFamily="@font/roboto_reg"
+                            android:inputType="textPersonName"
+                            android:paddingStart="10dp"
+                            android:paddingTop="2dp"
+                            android:paddingEnd="1dp"
+                            android:paddingBottom="2dp"
+                            android:textColor="@color/text_color"
+                            android:textColorHint="@color/text_color"
+                            android:textSize="14sp" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="35dp"
+                            android:fontFamily="@font/roboto_reg"
+                            android:paddingStart="15dp"
+                            android:paddingEnd="15dp"
+                            android:text="Password *"
+                            android:textColor="@color/black"
+                            android:textSize="15sp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="27dp"
+                            android:layout_marginStart="15dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginEnd="15dp"
+                            android:background="@drawable/edit_text_bg"
+                            android:orientation="horizontal"
+                            android:weightSum="2">
+
+                            <androidx.appcompat.widget.AppCompatEditText
+                                android:id="@+id/edit_text_password"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1.8"
+                                android:background="@null"
+                                android:fontFamily="@font/roboto_reg"
+                                android:inputType="textPassword"
+                                android:letterSpacing="0.25"
+                                android:paddingStart="10dp"
+                                android:gravity="center_vertical"
+                                android:paddingEnd="15dp"
+                                android:textColor="@color/black"
+                                android:textSize="14sp" />
+
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/password_toggle"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginEnd="15dp"
+                                android:layout_weight="0.2"
+                                android:src="@drawable/ic_eye_off" />
+
+                        </LinearLayout>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/login_btn"
+                            android:layout_width="150dp"
+                            android:layout_height="27dp"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="70dp"
+                            android:layout_marginBottom="25dp"
+                            android:background="@drawable/button_bg"
+                            android:fontFamily="@font/roboto_bold"
+                            android:text="Login"
+                            android:textAllCaps="false"
+                            android:textColor="@color/white"
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
+
+
+2.Java Code 
+
+        binding.loginBtn.setOnClickListener(view -> {
+
+            str_user_name = binding.edittextName.getText().toString().trim();
+            str_password = binding.editTextPassword.getText().toString().trim();
+
+            if (str_user_name.isEmpty()) {
+                Extensions.showSnackBar(LoginActivity.this, "Enter user name");
+            } else if (str_password.isEmpty()) {
+                Extensions.showSnackBar(LoginActivity.this, "Enter password");
+            } else {
+                if (Utils.isInternetAvailable(this)) {
+                    spotsDialog.show();
+                    LOGIN_API();
+                } else {
+                    Extensions.showSnackBar(LoginActivity.this, "No Internet Connection");
+                }
+            }
+        });
+
+ public void LOGIN_API() {
+        TreeMap<String, Object> map = new TreeMap<>();
+        map.put("username", str_user_name);
+        map.put("password", str_password);
+        map.put("latitude", latitude);
+        map.put("longitude", longitude);
+        map.put("location", str_location);
+
+        ApiInterface apiInterface = APIClient.getAPIClient();
+        Call<LoginResModel> call = apiInterface.login(map);
+        call.enqueue(new Callback<LoginResModel>() {
+
+            @Override
+            public void onResponse(Call<LoginResModel> call, Response<LoginResModel> response) {
+
+                LoginResModel items = response.body();
+                if (items != null) {
+
+                    String str_status = items.getStatus();
+                    String str_message = items.getMsg();
+
+                    if (str_status.equals("200")) {
+                        LoginDataModel data = response.body().getRecords();
+                        if (data != null) {
+                            System.out.println("LoginDataModel :" + data);
+
+                            ss_profile_pic = data.getProfilePicture();
+                            ss_user_id = data.getUserId();
+                            ss_user_name = data.getUserName();
+                            ss_user_type = data.getUserType();
+                            ss_user_role = data.getUserRole();
+
+                            System.out.println("### user_id :" + data.getUserId());
+                            System.out.println("### user_name :" + data.getUserName());
+                            System.out.println("### user_type :" + data.getUserType());
+                            System.out.println("### user_role :" + data.getUserRole());
+                            System.out.println("### profile_picture :" + data.getProfilePicture());
+
+                            sessionManager.createLoginSession(ss_user_id, ss_user_type,
+                                    ss_user_name, ss_user_role, ss_profile_pic);
+
+                            System.out.println("ss user_id :" + ss_user_id);
+                            System.out.println("ss user_name :" + ss_user_name);
+                            System.out.println("ss user_type :" + ss_user_type);
+                            System.out.println("ss user_role :" + ss_user_role);
+                            System.out.println("ss profile_picture :" + ss_profile_pic);
+                            spotsDialog.dismiss();
+                            Extensions.showSnackBar(LoginActivity.this, str_message);
+
+
+                            Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
+                            startActivity(intent);
+
+                        }
+                    } else if (str_status.equals("404")) {
+                        spotsDialog.dismiss();
+                        Extensions.showSnackBar(LoginActivity.this, str_message);
+                    } else if (str_status.equals("500")) {
+                        spotsDialog.dismiss();
+                        Extensions.showSnackBar(LoginActivity.this, str_message);
+                    } else if (str_status.equals("405")) {
+                        spotsDialog.dismiss();
+                        Extensions.showSnackBar(LoginActivity.this, str_message);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginResModel> call, Throwable t) {
+                spotsDialog.dismiss();
+                Extensions.showSnackBar(LoginActivity.this, "Something went wrong");
+                System.out.println("###  onFailure " + t.getLocalizedMessage());
+                call.cancel();
+
+            }
+        });
+    }
+
+
+3. Dependency 
+
+  //Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.0'
+
+4.Manifest
+
+	<uses-permission android:name="android.permission.INTERNET" />
+
+5.API Interface
+
+    @FormUrlEncoded
+    @POST("login")
+    Call<LoginResModel> login(@FieldMap() TreeMap<String, Object> map);
+
+6.API Client Class
+
+public class APIClient {
+
+    static Retrofit retrofit = null;
+
+    public static ApiInterface getAPIClient() {
+        if (retrofit == null) {
+            retrofit = new Retrofit
+                    .Builder()
+                    .baseUrl(BuildConfig.BASE_URL)
+                    .client(getHttpClient())
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+        }
+        return retrofit.create(ApiInterface.class);
+    }
+    private static OkHttpClient getHttpClient() {
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        return new OkHttpClient().newBuilder()
+                .connectTimeout(5, TimeUnit.MINUTES)
+                .readTimeout(5, TimeUnit.MINUTES)
+                .writeTimeout(5, TimeUnit.MINUTES)
+                .retryOnConnectionFailure(true)
+                .addInterceptor(interceptor)
+                .build();
+    }
+
+}
+
+
+
+
+
+
+
