@@ -108,3 +108,20 @@
             android:name="com.canhub.cropper.CropImageActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Base.Theme.AppCompat" />
+
+5. Image Uri to Base 64
+
+    public String toBase64(Uri uri, Context context) {
+
+        InputStream imageStream = null;
+        try {
+            imageStream = context.getContentResolver().openInputStream(uri);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        selectedImage.compress(Bitmap.CompressFormat.JPEG, 60, baos);
+        byte[] bArr = baos.toByteArray();
+        return Base64.encodeToString(bArr, Base64.DEFAULT);
+    }
